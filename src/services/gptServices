@@ -1,0 +1,12 @@
+export const improveSummary = async (summary) => {
+  const response = await fetch("YOUR_BACKEND_ENDPOINT", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      prompt: `Improve this resume summary professionally:\n${summary}`,
+    }),
+  });
+
+  const data = await response.json();
+  return data.result;
+};
