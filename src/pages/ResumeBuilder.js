@@ -1,7 +1,8 @@
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
-import html2pdf from "html2pdf.js";
+import html2pdf from "html2pdf.js/dist/html2pdf.bundle";
 import { useEffect } from "react";
+import Header from "../components/Header";
 
 const ResumeBuilder = () => {
   const downloadPDF = () => {
@@ -37,7 +38,8 @@ const ResumeBuilder = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <div className="flex gap-8 p-10">
+      <Header />
+      <div className="flex gap-8 p-10 pt-20">
         {/* FORM SIDE */}
         <div
           id="form-container"
