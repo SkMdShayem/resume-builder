@@ -1,10 +1,20 @@
+import { getSectionVisibility } from "../utils/resumeSectionVisibility";
+
 const AcademicTemplate = ({ data }) => {
+  const {
+    showSummary,
+    showExperience,
+    showEducation,
+    showSkills,
+    showLanguages,
+  } = getSectionVisibility(data);
+
   return (
     <div className="p-12 h-full flex flex-col bg-white text-gray-900 font-serif">
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-1">
-          {data?.personalInfo?.name || "Your Name"}
+          {data?.personalInfo?.name || ""}
         </h1>
         <div className="flex justify-center gap-3 text-xs text-gray-600 flex-wrap">
           {data?.personalInfo?.email && (
@@ -26,7 +36,7 @@ const AcademicTemplate = ({ data }) => {
       </div>
 
       {/* Summary */}
-      {data?.summary && (
+      {showSummary && (
         <div className="mb-6 text-center">
           <p className="text-xs leading-relaxed text-gray-700 italic">
             {data.summary}
@@ -35,7 +45,7 @@ const AcademicTemplate = ({ data }) => {
       )}
 
       {/* Education */}
-      {data?.education && data.education.length > 0 && (
+      {showEducation && (
         <div className="mb-6">
           <h2 className="text-xs font-bold text-gray-900 mb-3 uppercase">
             EDUCATION
@@ -57,7 +67,7 @@ const AcademicTemplate = ({ data }) => {
       )}
 
       {/* Experience */}
-      {data?.experience && data.experience.length > 0 && (
+      {showExperience && (
         <div className="mb-6">
           <h2 className="text-xs font-bold text-gray-900 mb-3 uppercase">
             PROFESSIONAL EXPERIENCE
@@ -80,7 +90,7 @@ const AcademicTemplate = ({ data }) => {
 
       {/* Skills & Languages */}
       <div className="flex gap-8 text-xs flex-1">
-        {data?.skills && data.skills.length > 0 && (
+        {showSkills && (
           <div>
             <h2 className="font-bold text-gray-900 mb-2 uppercase">
               KEY SKILLS
@@ -92,7 +102,7 @@ const AcademicTemplate = ({ data }) => {
             </ul>
           </div>
         )}
-        {data?.languages && data.languages.length > 0 && (
+        {showLanguages && (
           <div>
             <h2 className="font-bold text-gray-900 mb-2 uppercase">
               LANGUAGES

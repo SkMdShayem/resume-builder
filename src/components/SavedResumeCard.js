@@ -1,25 +1,46 @@
 import ModernTemplate from "../templates/ModernTemplate";
 import MinimalTemplate from "../templates/MinimalTemplate";
 import ProfessionalTemplate from "../templates/ProfessionalTemplate";
+import ExecutiveTemplate from "../templates/ExecutiveTemplate";
+import AtsOptimizedTemplate from "../templates/AtsOptimizedTemplate";
+import CreativeTemplate from "../templates/CreativeTemplate";
+import AcademicTemplate from "../templates/AcademicTemplate";
+import EngineeringTemplate from "../templates/EngineeringTemplate";
+import ClassicTemplate from "../templates/ClassicTemplate";
+import normalizeResumeData from "../utils/normalizeResumeData";
 
 const templateMap = {
   modern: ModernTemplate,
   minimal: MinimalTemplate,
   professional: ProfessionalTemplate,
+  executive: ExecutiveTemplate,
+  "ats-optimized": AtsOptimizedTemplate,
+  creative: CreativeTemplate,
+  academic: AcademicTemplate,
+  engineering: EngineeringTemplate,
+  technical: EngineeringTemplate,
+  classic: ClassicTemplate,
 };
 
 const SavedResumeCard = ({ resume, onEdit, onDelete }) => {
   const Template = templateMap[resume.template] || ModernTemplate;
+  const normalizedResume = normalizeResumeData(resume.data);
+  const templateName = resume.template
+    ? resume.template
+        .split("-")
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ")
+    : "No template";
 
   return (
     <div className="border rounded-lg shadow-sm overflow-hidden bg-white w-56 h-[318px] flex flex-col">
       <div className="p-3">
         <div className="mb-2">
           <h3 className="text-sm font-semibold truncate">
-            {resume.data.personalInfo.name || "Untitled"}
+            {normalizedResume.personalInfo.name || "Untitled"}
           </h3>
           <p className="text-[10px] text-gray-500 truncate">
-            {resume.template ? `${resume.template.charAt(0).toUpperCase()}${resume.template.slice(1)} Template` : "No template"}
+            {resume.template ? `${templateName} Template` : "No template"}
           </p>
         </div>
       </div>
@@ -35,7 +56,7 @@ const SavedResumeCard = ({ resume, onEdit, onDelete }) => {
           }}
         >
           <div className="w-[794px] h-[1123px] bg-white">
-            <Template data={resume.data} />
+            <Template data={normalizedResume} />
           </div>
         </div>
       </div>

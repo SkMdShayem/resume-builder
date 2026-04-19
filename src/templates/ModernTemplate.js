@@ -1,3 +1,5 @@
+import { getSectionVisibility } from "../utils/resumeSectionVisibility";
+
 const ModernTemplate = ({ data }) => {
   const {
     personalInfo = {},
@@ -8,6 +10,14 @@ const ModernTemplate = ({ data }) => {
     skills = [],
     languages = [],
   } = data || {};
+  const {
+    showSummary,
+    showExperience,
+    showEducation,
+    showSkills,
+    showLanguages,
+    showSkillsAndLanguages,
+  } = getSectionVisibility(data);
 
   return (
     <div className="max-w-5xl mx-auto min-h-full bg-white shadow-xl ring-1 ring-gray-200">
@@ -35,14 +45,16 @@ const ModernTemplate = ({ data }) => {
 
       <main className="grid grid-cols-1 lg:grid-cols-2 gap-10 p-10">
         <section className="space-y-8">
-          <div className="rounded-2xl border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-slate-800 mb-4">Summary</h2>
-            <p className="text-slate-600 leading-relaxed">{summary || "No summary provided."}</p>
-          </div>
+          {showSummary ? (
+            <div className="rounded-2xl border border-gray-200 p-8">
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Summary</h2>
+              <p className="text-slate-600 leading-relaxed">{summary}</p>
+            </div>
+          ) : null}
 
-          <div className="rounded-2xl border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-slate-800 mb-4">Experience</h2>
-            {experience.length ? (
+          {showExperience ? (
+            <div className="rounded-2xl border border-gray-200 p-8">
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Experience</h2>
               <div className="space-y-6">
                 {experience.map((exp, i) => (
                   <div key={i} className="space-y-2">
@@ -54,16 +66,14 @@ const ModernTemplate = ({ data }) => {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-gray-500">No experience added yet.</p>
-            )}
-          </div>
+            </div>
+          ) : null}
         </section>
 
         <section className="space-y-8">
-          <div className="rounded-2xl border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-slate-800 mb-4">Education</h2>
-            {education.length ? (
+          {showEducation ? (
+            <div className="rounded-2xl border border-gray-200 p-8">
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Education</h2>
               <div className="space-y-6">
                 {education.map((edu, i) => (
                   <div key={i} className="space-y-2">
@@ -75,51 +85,47 @@ const ModernTemplate = ({ data }) => {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-gray-500">No education added yet.</p>
-            )}
-          </div>
+            </div>
+          ) : null}
 
-          <div className="rounded-2xl border border-gray-200 p-8">
-            <h2 className="text-xl font-semibold text-slate-800 mb-4">Skills & Languages</h2>
-            <div className="grid grid-cols-2 gap-6">
-              <div>
-                <h3 className="text-sm font-semibold text-slate-600 mb-2">Skills</h3>
-                {skills.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {skills.map((skill, i) => (
-                      <span
-                        key={i}
-                        className="rounded-full bg-cyan-50 px-3 py-1 text-xs text-cyan-700"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+          {showSkillsAndLanguages ? (
+            <div className="rounded-2xl border border-gray-200 p-8">
+              <h2 className="text-xl font-semibold text-slate-800 mb-4">Skills & Languages</h2>
+              <div className="grid grid-cols-2 gap-6">
+                {showSkills ? (
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-600 mb-2">Skills</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {skills.map((skill, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full bg-cyan-50 px-3 py-1 text-xs text-cyan-700"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                ) : (
-                  <p className="text-sm text-gray-500">No skills added yet.</p>
-                )}
-              </div>
+                ) : null}
 
-              <div>
-                <h3 className="text-sm font-semibold text-slate-600 mb-2">Languages</h3>
-                {languages.length ? (
-                  <div className="flex flex-wrap gap-2">
-                    {languages.map((lang, i) => (
-                      <span
-                        key={i}
-                        className="rounded-full bg-cyan-50 px-3 py-1 text-xs text-cyan-700"
-                      >
-                        {lang}
-                      </span>
-                    ))}
+                {showLanguages ? (
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-600 mb-2">Languages</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {languages.map((lang, i) => (
+                        <span
+                          key={i}
+                          className="rounded-full bg-cyan-50 px-3 py-1 text-xs text-cyan-700"
+                        >
+                          {lang}
+                        </span>
+                      ))}
+                    </div>
                   </div>
-                ) : (
-                  <p className="text-sm text-gray-500">No languages added yet.</p>
-                )}
+                ) : null}
               </div>
             </div>
-          </div>
+          ) : null}
         </section>
       </main>
     </div>

@@ -1,12 +1,21 @@
+import { getSectionVisibility } from "../utils/resumeSectionVisibility";
+
 const CreativeTemplate = ({ data }) => {
+  const {
+    showSummary,
+    showExperience,
+    showEducation,
+    showSkills,
+    showLanguages,
+  } = getSectionVisibility(data);
+
   return (
     <div className="p-10 h-full flex flex-col bg-gradient-to-br from-purple-50 to-blue-50 text-gray-900">
       {/* Header with accent */}
       <div className="mb-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white p-6 rounded-lg">
         <h1 className="text-3xl font-bold mb-1">
-          {data?.personalInfo?.name || "Your Name"}
+          {data?.personalInfo?.name || ""}
         </h1>
-        <p className="text-purple-100 text-sm">Creative Professional</p>
         <div className="flex gap-3 text-xs mt-3 flex-wrap">
           {data?.personalInfo?.email && (
             <span>{data.personalInfo.email}</span>
@@ -27,7 +36,7 @@ const CreativeTemplate = ({ data }) => {
       </div>
 
       {/* Summary */}
-      {data?.summary && (
+      {showSummary && (
         <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
           <h2 className="text-sm font-bold text-purple-600 mb-2 uppercase">
             About
@@ -41,7 +50,7 @@ const CreativeTemplate = ({ data }) => {
       {/* Experience & Education Side by Side */}
       <div className="grid grid-cols-2 gap-4 flex-1">
         {/* Experience */}
-        {data?.experience && data.experience.length > 0 && (
+        {showExperience && (
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h2 className="text-sm font-bold text-purple-600 mb-3 uppercase">
               Experience
@@ -65,7 +74,7 @@ const CreativeTemplate = ({ data }) => {
         )}
 
         {/* Education */}
-        {data?.education && data.education.length > 0 && (
+        {showEducation && (
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h2 className="text-sm font-bold text-blue-600 mb-3 uppercase">
               Education
@@ -91,7 +100,7 @@ const CreativeTemplate = ({ data }) => {
 
       {/* Skills & Languages */}
       <div className="grid grid-cols-2 gap-4 mt-4">
-        {data?.skills && data.skills.length > 0 && (
+        {showSkills && (
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h2 className="text-sm font-bold text-purple-600 mb-2 uppercase">
               Skills
@@ -108,7 +117,7 @@ const CreativeTemplate = ({ data }) => {
             </div>
           </div>
         )}
-        {data?.languages && data.languages.length > 0 && (
+        {showLanguages && (
           <div className="bg-white p-4 rounded-lg shadow-sm">
             <h2 className="text-sm font-bold text-blue-600 mb-2 uppercase">
               Languages

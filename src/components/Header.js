@@ -21,25 +21,17 @@ const Header = () => {
           {/* Navigation */}
           <nav className="hidden md:flex gap-8 items-center">
             <button
-              onClick={() => navigate("/")}
-              className="text-gray-600 hover:text-gray-900 transition"
-            >
-              Home
-            </button>
-            <button
               onClick={() => navigate("/templates")}
               className="text-gray-600 hover:text-gray-900 transition"
             >
               Templates
             </button>
-            {user && (
-              <button
-                onClick={() => navigate("/dashboard")}
-                className="text-gray-600 hover:text-gray-900 transition"
-              >
-                Dashboard
-              </button>
-            )}
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="text-gray-600 hover:text-gray-900 transition"
+            >
+              Dashboard
+            </button>
           </nav>
 
           {/* CTA Buttons */}

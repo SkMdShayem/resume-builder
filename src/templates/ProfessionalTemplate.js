@@ -1,3 +1,5 @@
+import { getSectionVisibility } from "../utils/resumeSectionVisibility";
+
 const ProfessionalTemplate = ({ data }) => {
   const {
     personalInfo = {},
@@ -8,10 +10,18 @@ const ProfessionalTemplate = ({ data }) => {
     skills = [],
     languages = [],
   } = data || {};
+  const {
+    showSummary,
+    showExperience,
+    showEducation,
+    showSkills,
+    showLanguages,
+    showLinks,
+  } = getSectionVisibility(data);
 
   return (
     <div className="max-w-5xl mx-auto min-h-full bg-white shadow-lg ring-1 ring-gray-200">
-      <div className="grid grid-cols-1 lg:grid-cols-3">
+      <div className="min-h-[1123px] grid grid-cols-1 lg:grid-cols-3">
         <aside className="lg:col-span-1 bg-slate-900 text-white p-8">
           <div className="text-center">
             <h1 className="text-3xl font-bold tracking-tight">{personalInfo.name}</h1>
@@ -21,7 +31,7 @@ const ProfessionalTemplate = ({ data }) => {
             <p className="text-sm text-slate-200 mt-1">{personalInfo.location}</p>
           </div>
 
-          {(links.linkedin || links.github || links.portfolio) && (
+          {showLinks && (
             <div className="mt-8">
               <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 Links
@@ -49,11 +59,11 @@ const ProfessionalTemplate = ({ data }) => {
             </div>
           )}
 
-          <div className="mt-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
-              Skills
-            </h2>
-            {skills.length ? (
+          {showSkills ? (
+            <div className="mt-8">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
+                Skills
+              </h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 {skills.map((skill, i) => (
                   <span
@@ -64,16 +74,14 @@ const ProfessionalTemplate = ({ data }) => {
                   </span>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-slate-300 mt-2">No skills added yet.</p>
-            )}
-          </div>
+            </div>
+          ) : null}
 
-          <div className="mt-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
-              Languages
-            </h2>
-            {languages.length ? (
+          {showLanguages ? (
+            <div className="mt-8">
+              <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
+                Languages
+              </h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 {languages.map((lang, i) => (
                   <span
@@ -84,23 +92,21 @@ const ProfessionalTemplate = ({ data }) => {
                   </span>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-slate-300 mt-2">No languages added yet.</p>
-            )}
-          </div>
+            </div>
+          ) : null}
         </aside>
 
         <main className="lg:col-span-2 p-10">
-          <section className="mb-10">
-            <h2 className="text-2xl font-semibold text-slate-800">Professional Summary</h2>
-            <p className="mt-3 text-slate-700 leading-relaxed">
-              {summary || "No summary provided."}
-            </p>
-          </section>
+          {showSummary ? (
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold text-slate-800">Professional Summary</h2>
+              <p className="mt-3 text-slate-700 leading-relaxed">{summary}</p>
+            </section>
+          ) : null}
 
-          <section className="mb-10">
-            <h2 className="text-2xl font-semibold text-slate-800">Experience</h2>
-            {experience.length ? (
+          {showExperience ? (
+            <section className="mb-10">
+              <h2 className="text-2xl font-semibold text-slate-800">Experience</h2>
               <div className="mt-6 space-y-6">
                 {experience.map((exp, i) => (
                   <div key={i} className="rounded-xl border border-slate-200 p-6">
@@ -112,14 +118,12 @@ const ProfessionalTemplate = ({ data }) => {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-slate-500 mt-4">No experience added yet.</p>
-            )}
-          </section>
+            </section>
+          ) : null}
 
-          <section>
-            <h2 className="text-2xl font-semibold text-slate-800">Education</h2>
-            {education.length ? (
+          {showEducation ? (
+            <section>
+              <h2 className="text-2xl font-semibold text-slate-800">Education</h2>
               <div className="mt-6 space-y-6">
                 {education.map((edu, i) => (
                   <div key={i} className="rounded-xl border border-slate-200 p-6">
@@ -131,10 +135,8 @@ const ProfessionalTemplate = ({ data }) => {
                   </div>
                 ))}
               </div>
-            ) : (
-              <p className="text-sm text-slate-500 mt-4">No education added yet.</p>
-            )}
-          </section>
+            </section>
+          ) : null}
         </main>
       </div>
     </div>

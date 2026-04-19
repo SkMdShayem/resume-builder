@@ -1,10 +1,21 @@
+import { getSectionVisibility } from "../utils/resumeSectionVisibility";
+
 const ExecutiveTemplate = ({ data }) => {
+  const {
+    showSummary,
+    showExperience,
+    showEducation,
+    showSkills,
+    showLanguages,
+    showLinks,
+  } = getSectionVisibility(data);
+
   return (
     <div className="p-12 h-full flex flex-col bg-white text-gray-900 font-serif">
       {/* Header */}
       <div className="border-b-4 border-blue-900 pb-8 mb-8">
         <h1 className="text-4xl font-bold text-blue-900 mb-2">
-          {data?.personalInfo?.name || "Your Name"}
+          {data?.personalInfo?.name || ""}
         </h1>
         <div className="flex gap-4 text-sm flex-wrap">
           {data?.personalInfo?.email && (
@@ -23,7 +34,7 @@ const ExecutiveTemplate = ({ data }) => {
             <span>{data.personalInfo.location}</span>
           )}
         </div>
-        {(data?.links?.linkedin || data?.links?.github) && (
+        {showLinks && (
           <div className="flex gap-3 mt-2 text-sm">
             {data?.links?.linkedin && (
               <span>LinkedIn: {data.links.linkedin}</span>
@@ -36,7 +47,7 @@ const ExecutiveTemplate = ({ data }) => {
       </div>
 
       {/* Summary */}
-      {data?.summary && (
+      {showSummary && (
         <div className="mb-8">
           <h2 className="text-lg font-bold text-blue-900 mb-2 uppercase tracking-wide">
             Professional Summary
@@ -46,7 +57,7 @@ const ExecutiveTemplate = ({ data }) => {
       )}
 
       {/* Experience */}
-      {data?.experience && data.experience.length > 0 && (
+      {showExperience && (
         <div className="mb-8">
           <h2 className="text-lg font-bold text-blue-900 mb-3 uppercase tracking-wide">
             Professional Experience
@@ -68,7 +79,7 @@ const ExecutiveTemplate = ({ data }) => {
       )}
 
       {/* Education */}
-      {data?.education && data.education.length > 0 && (
+      {showEducation && (
         <div className="mb-8">
           <h2 className="text-lg font-bold text-blue-900 mb-3 uppercase tracking-wide">
             Education
@@ -89,7 +100,7 @@ const ExecutiveTemplate = ({ data }) => {
 
       {/* Skills & Languages */}
       <div className="flex gap-8 text-xs flex-1">
-        {data?.skills && data.skills.length > 0 && (
+        {showSkills && (
           <div>
             <h2 className="font-bold text-blue-900 mb-2 uppercase tracking-wide">
               Skills
@@ -103,7 +114,7 @@ const ExecutiveTemplate = ({ data }) => {
             </div>
           </div>
         )}
-        {data?.languages && data.languages.length > 0 && (
+        {showLanguages && (
           <div>
             <h2 className="font-bold text-blue-900 mb-2 uppercase tracking-wide">
               Languages

@@ -5,27 +5,100 @@ import ExecutiveTemplate from "../templates/ExecutiveTemplate";
 import AtsOptimizedTemplate from "../templates/AtsOptimizedTemplate";
 import CreativeTemplate from "../templates/CreativeTemplate";
 import AcademicTemplate from "../templates/AcademicTemplate";
-import TechnicalTemplate from "../templates/TechnicalTemplate";
+import EngineeringTemplate from "../templates/EngineeringTemplate";
 import ClassicTemplate from "../templates/ClassicTemplate";
 import { useDispatch } from "react-redux";
 import { setTemplate } from "../app/resumeSlice";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
+import { sampleResume } from "../constants/sampleResume";
+import normalizeResumeData from "../utils/normalizeResumeData";
+import TemplateCard from "../components/TemplateCard";
 
 const Templates = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const previewResume = {
+    ...normalizeResumeData(sampleResume),
+    personalInfo: {
+      ...normalizeResumeData(sampleResume).personalInfo,
+      name: sampleResume.personalInfo?.name || "John Doe",
+    },
+  };
 
   const templates = [
-    { id: "modern", name: "Modern", component: ModernTemplate },
-    { id: "minimal", name: "Minimal", component: MinimalTemplate },
-    { id: "professional", name: "Professional", component: ProfessionalTemplate },
-    { id: "executive", name: "Executive", component: ExecutiveTemplate },
-    { id: "ats-optimized", name: "ATS Optimized", component: AtsOptimizedTemplate },
-    { id: "creative", name: "Creative", component: CreativeTemplate },
-    { id: "academic", name: "Academic", component: AcademicTemplate },
-    { id: "technical", name: "Technical", component: TechnicalTemplate },
-    { id: "classic", name: "Classic", component: ClassicTemplate },
+    {
+      id: "modern",
+      name: "Modern",
+      component: ModernTemplate,
+      description: "Bold gradients and polished cards for contemporary roles.",
+      accent: "from-cyan-500 to-blue-600",
+      tag: "Popular",
+    },
+    {
+      id: "minimal",
+      name: "Minimal",
+      component: MinimalTemplate,
+      description: "Quiet, clean spacing that keeps the focus on your content.",
+      accent: "from-slate-300 to-slate-500",
+      tag: "Simple",
+    },
+    {
+      id: "professional",
+      name: "Professional",
+      component: ProfessionalTemplate,
+      description: "Structured and confident for business-facing applications.",
+      accent: "from-slate-700 to-slate-950",
+      tag: "Business",
+    },
+    {
+      id: "executive",
+      name: "Executive",
+      component: ExecutiveTemplate,
+      description: "High-trust layout tailored for senior leadership profiles.",
+      accent: "from-indigo-700 to-slate-900",
+      tag: "Leadership",
+    },
+    {
+      id: "ats-optimized",
+      name: "ATS Optimized",
+      component: AtsOptimizedTemplate,
+      description: "Streamlined formatting designed for maximum parser clarity.",
+      accent: "from-stone-500 to-slate-800",
+      tag: "ATS",
+    },
+    {
+      id: "creative",
+      name: "Creative",
+      component: CreativeTemplate,
+      description: "Expressive visual rhythm for design-forward applications.",
+      accent: "from-orange-500 to-rose-600",
+      tag: "Creative",
+    },
+    {
+      id: "academic",
+      name: "Academic",
+      component: AcademicTemplate,
+      description: "Roomy and research-friendly for education-heavy resumes.",
+      accent: "from-blue-600 to-indigo-700",
+      tag: "Research",
+    },
+    {
+      id: "engineering",
+      name: "Engineering",
+      component: EngineeringTemplate,
+      description: "A sharper replacement for the old technical layout with a stronger dev-first look.",
+      accent: "from-cyan-500 to-slate-950",
+      tag: "New",
+    },
+    {
+      id: "classic",
+      name: "Classic",
+      component: ClassicTemplate,
+      description: "Timeless typography and balance for broad job markets.",
+      accent: "from-slate-500 to-slate-700",
+      tag: "Classic",
+    },
   ];
 
   const handleSelect = (template) => {
@@ -36,41 +109,30 @@ const Templates = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[radial-gradient(circle_at_top,_rgba(191,219,254,0.45),_transparent_28%),linear-gradient(180deg,_#f8fafc_0%,_#eef2ff_100%)]">
       <Header />
-      <div className="p-10">
-        <h1 className="text-3xl font-bold mb-3">
-          Choose Your Resume Template
-        </h1>
-        <p className="text-gray-600 mb-8">
-          Select from our professionally designed templates to get started
-        </p>
+      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="max-w-3xl">
+          <span className="inline-flex rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-blue-700">
+            Resume Gallery
+          </span>
+          <h1 className="mt-4 text-4xl font-bold tracking-tight text-slate-950">
+            Choose a template that matches the story you want to tell
+          </h1>
+          <p className="mt-4 text-lg leading-8 text-slate-600">
+            Start with a polished layout, then customize the content in the builder.
+            The old technical template has been replaced with a stronger engineering-focused design.
+          </p>
+        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mt-10 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
           {templates.map((template) => (
-            <div
+            <TemplateCard
               key={template.id}
-              className="bg-white rounded-lg shadow hover:shadow-lg transition cursor-pointer"
-              onClick={() => handleSelect(template)}
-            >
-              <div className="h-64 bg-gray-200 rounded-t-lg overflow-hidden">
-                <div className="scale-[0.4] origin-top-left w-[250%]">
-                  <template.component data={null} />
-                </div>
-              </div>
-              <div className="p-4">
-                <h3 className="font-semibold text-gray-900">{template.name}</h3>
-                <button
-                  className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleSelect(template);
-                  }}
-                >
-                  Use Template
-                </button>
-              </div>
-            </div>
+              template={template}
+              previewResume={previewResume}
+              onSelect={handleSelect}
+            />
           ))}
         </div>
       </div>

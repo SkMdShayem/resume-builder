@@ -1,10 +1,21 @@
+import { getSectionVisibility } from "../utils/resumeSectionVisibility";
+
 const MinimalistTemplate = ({ data }) => {
+  const {
+    showSummary,
+    showExperience,
+    showEducation,
+    showSkills,
+    showLanguages,
+    showLinks,
+  } = getSectionVisibility(data);
+
   return (
     <div className="p-10 h-full flex flex-col bg-white text-gray-900">
       {/* Header */}
       <div className="mb-6">
         <h1 className="text-3xl font-light tracking-widest text-gray-900 mb-1">
-          {data?.personalInfo?.name || "Your Name"}
+          {data?.personalInfo?.name || ""}
         </h1>
         <div className="h-px w-full bg-gray-300 mb-3"></div>
         <div className="flex gap-3 text-xs text-gray-600 flex-wrap">
@@ -24,7 +35,7 @@ const MinimalistTemplate = ({ data }) => {
             <span>{data.personalInfo.location}</span>
           )}
         </div>
-        {(data?.links?.linkedin || data?.links?.github) && (
+        {showLinks && (
           <div className="flex gap-3 mt-2 text-xs text-gray-600">
             {data?.links?.linkedin && (
               <span>{data.links.linkedin}</span>
@@ -40,7 +51,7 @@ const MinimalistTemplate = ({ data }) => {
       </div>
 
       {/* Summary */}
-      {data?.summary && (
+      {showSummary && (
         <div className="mb-5">
           <p className="text-xs leading-relaxed text-gray-700">
             {data.summary}
@@ -49,7 +60,7 @@ const MinimalistTemplate = ({ data }) => {
       )}
 
       {/* Experience */}
-      {data?.experience && data.experience.length > 0 && (
+      {showExperience && (
         <div className="mb-5">
           <h2 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-widest">
             Experience
@@ -71,7 +82,7 @@ const MinimalistTemplate = ({ data }) => {
       )}
 
       {/* Education */}
-      {data?.education && data.education.length > 0 && (
+      {showEducation && (
         <div className="mb-5">
           <h2 className="text-xs font-semibold text-gray-900 mb-3 uppercase tracking-widest">
             Education
@@ -92,7 +103,7 @@ const MinimalistTemplate = ({ data }) => {
 
       {/* Two Column: Skills & Languages */}
       <div className="grid grid-cols-2 gap-4">
-        {data?.skills && data.skills.length > 0 && (
+        {showSkills && (
           <div>
             <h2 className="text-xs font-semibold text-gray-900 mb-2 uppercase tracking-widest">
               Skills
@@ -106,7 +117,7 @@ const MinimalistTemplate = ({ data }) => {
             </div>
           </div>
         )}
-        {data?.languages && data.languages.length > 0 && (
+        {showLanguages && (
           <div>
             <h2 className="text-xs font-semibold text-gray-900 mb-2 uppercase tracking-widest">
               Languages

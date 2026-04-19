@@ -19,6 +19,7 @@ import {
 import { useState,useEffect } from "react";
 import improveSummary from "../services/gptServices";
 import { useNavigate } from "react-router-dom";
+import normalizeResumeData from "../utils/normalizeResumeData";
 
 const ResumeForm = () => {
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const ResumeForm = () => {
 
     const newResume = {
       id: editingResume?.id || Date.now(),
-      data: resume,
+      data: normalizeResumeData(resume),
       template: currentTemplate || selectedTemplate,
     };
 
@@ -59,7 +60,7 @@ const ResumeForm = () => {
     localStorage.removeItem("editingResume");
 
     alert("Resume Saved Successfully!");
-    navigate("/");
+    navigate("/dashboard");
   };
 
   const handleAddSkill = () => {

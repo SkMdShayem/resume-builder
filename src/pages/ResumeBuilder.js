@@ -1,22 +1,38 @@
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
-import html2pdf from "html2pdf.js/dist/html2pdf.bundle";
-import { useEffect } from "react";
+import { pdf } from "@react-pdf/renderer";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import Header from "../components/Header";
+import ResumePdfDocument from "../pdf/ResumePdfDocument";
+import normalizeResumeData from "../utils/normalizeResumeData";
 
 const ResumeBuilder = () => {
-  const downloadPDF = () => {
-    const element = document.getElementById("resume-preview");
+  const { currentResume, selectedTemplate } = useSelector(
+    (state) => state.resume,
+  );
+  const [isDownloading, setIsDownloading] = useState(false);
 
-    const options = {
-      margin: 0,
-      filename: "My_Resume.pdf",
-      image: { type: "jpeg", quality: 1 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "px", format: [794, 1123], orientation: "portrait" },
-    };
+  const downloadPDF = async () => {
+    setIsDownloading(true);
 
-    html2pdf().set(options).from(element).save();
+    try {
+      const template = currentResume?.template ?? selectedTemplate ?? "modern";
+      const normalizedResume = normalizeResumeData(currentResume);
+      const blob = await pdf(
+        <ResumePdfDocument resume={normalizedResume} template={template} />,
+      ).toBlob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+
+      link.href = url;
+      link.download = `${currentResume?.personalInfo?.name || "My_Resume"}.pdf`;
+      link.click();
+
+      URL.revokeObjectURL(url);
+    } finally {
+      setIsDownloading(false);
+    }
   };
 
   useEffect(() => {
@@ -50,17 +66,17 @@ const ResumeBuilder = () => {
 
         {/* PREVIEW SIDE */}
         <div className="w-1/2 flex justify-center">
-          <div className="sticky top-10">
-            <div className="scale-[0.75] origin-top">
-              <ResumePreview />
-              {/* DOWNLOAD BUTTON */}
+          <div className="sticky top-10 w-full max-w-[720px]">
+            <div className="mb-4 flex justify-end">
               <button
                 onClick={downloadPDF}
-                className="fixed top-6 right-6 bg-green-600 text-white px-6 py-2 rounded shadow-lg z-50"
+                disabled={isDownloading}
+                className="bg-green-600 text-white px-6 py-2 rounded shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                Download PDF
+                {isDownloading ? "Generating PDF..." : "Download PDF"}
               </button>
             </div>
+            <ResumePreview />
           </div>
         </div>
       </div>
