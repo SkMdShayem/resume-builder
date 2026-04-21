@@ -403,7 +403,7 @@ const ResumeForm = () => {
 
                 <button
                   onClick={handleAddSkill}
-                  className="bg-green-600 text-white px-4 rounded"
+                  className="bg-purple-600 text-white px-4 rounded"
                 >
                   Add
                 </button>
@@ -441,7 +441,7 @@ const ResumeForm = () => {
 
                 <button
                   onClick={handleAddLanguage}
-                  className="bg-green-600 text-white px-4 rounded"
+                  className="bg-purple-600 text-white px-4 rounded"
                 >
                   Add
                 </button>
@@ -501,7 +501,7 @@ const ResumeForm = () => {
             {step === 6 && (
               <button
                 onClick={handleSave}
-                className="bg-green-600 text-white px-4 py-2 rounded"
+                className="bg-purple-600 text-white px-4 py-2 rounded"
               >
                 Save
               </button>

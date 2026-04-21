@@ -18,10 +18,10 @@ const Header = () => {
 
           <nav className="hidden items-center gap-8 md:flex">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate("/dashboard")}
               className="text-gray-600 transition hover:text-gray-900"
             >
-              Home
+              Dashboard
             </button>
             <button
               onClick={() => navigate("/templates")}
