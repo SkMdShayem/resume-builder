@@ -6,6 +6,7 @@ import AtsOptimizedTemplate from "../templates/AtsOptimizedTemplate";
 import CreativeTemplate from "../templates/CreativeTemplate";
 import AcademicTemplate from "../templates/AcademicTemplate";
 import EngineeringTemplate from "../templates/EngineeringTemplate";
+import TechnicalTemplate from "../templates/TechnicalTemplate";
 import ClassicTemplate from "../templates/ClassicTemplate";
 import normalizeResumeData from "../utils/normalizeResumeData";
 
@@ -18,7 +19,7 @@ const templateMap = {
   creative: CreativeTemplate,
   academic: AcademicTemplate,
   engineering: EngineeringTemplate,
-  technical: EngineeringTemplate,
+  technical: TechnicalTemplate,
   classic: ClassicTemplate,
 };
 
