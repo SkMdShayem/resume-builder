@@ -1,7 +1,7 @@
-import ResumeForm from "./ResumeForm";
-import ResumePreview from "./ResumePreview";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import ResumeForm from "./ResumeForm";
+import ResumePreview from "./ResumePreview";
 import Header from "../components/Header";
 
 const ResumeBuilder = () => {
@@ -95,6 +95,10 @@ const ResumeBuilder = () => {
     const form = document.getElementById("form-container");
     const preview = document.getElementById("preview-container");
 
+    if (!form || !preview) {
+      return undefined;
+    }
+
     const handleScroll = () => {
       const percentage =
         form.scrollTop / (form.scrollHeight - form.clientHeight);
@@ -109,25 +113,23 @@ const ResumeBuilder = () => {
   }, []);
 
   return (
-    <div className="bg-gray-100 min-h-screen">
+    <div className="min-h-screen bg-gray-100">
       <Header />
       <div className="flex gap-8 p-10 pt-20">
-        {/* FORM SIDE */}
         <div
           id="form-container"
-          className="w-1/2 h-screen overflow-y-scroll pr-6"
+          className="h-screen w-1/2 overflow-y-scroll pr-6"
         >
           <ResumeForm />
         </div>
 
-        {/* PREVIEW SIDE */}
-        <div className="w-1/2 flex justify-center">
+        <div className="flex w-1/2 justify-center">
           <div className="sticky top-10 w-full max-w-[720px]">
             <div className="mb-4 flex justify-end">
               <button
                 onClick={downloadPDF}
                 disabled={isDownloading}
-                className="bg-green-600 text-white px-6 py-2 rounded shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
+                className="rounded bg-green-600 px-6 py-2 text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
               >
                 {isDownloading ? "Preparing PDF..." : "Save as PDF"}
               </button>

@@ -7,6 +7,7 @@ import AtsOptimizedTemplate from "../templates/AtsOptimizedTemplate";
 import CreativeTemplate from "../templates/CreativeTemplate";
 import AcademicTemplate from "../templates/AcademicTemplate";
 import EngineeringTemplate from "../templates/EngineeringTemplate";
+import TechnicalTemplate from "../templates/TechnicalTemplate";
 import ClassicTemplate from "../templates/ClassicTemplate";
 import normalizeResumeData from "../utils/normalizeResumeData";
 
@@ -37,7 +38,7 @@ const ResumePreview = () => {
       case "engineering":
         return <EngineeringTemplate data={normalizedResume} />;
       case "technical":
-        return <EngineeringTemplate data={normalizedResume} />;
+        return <TechnicalTemplate data={normalizedResume} />;
       case "classic":
         return <ClassicTemplate data={normalizedResume} />;
       default:
@@ -48,11 +49,11 @@ const ResumePreview = () => {
   return (
     <div
       id="preview-container"
-      className="flex justify-center bg-gray-200 min-h-screen p-4 md:p-6"
+      className="flex min-h-screen justify-center bg-gray-200 p-4 md:p-6"
     >
       <div
         id="resume-preview"
-        className="w-full max-w-[794px] min-h-[1123px] bg-white shadow-lg overflow-hidden"
+        className="min-h-[1123px] w-full max-w-[794px] overflow-hidden bg-white shadow-lg"
       >
         {renderTemplate()}
       </div>

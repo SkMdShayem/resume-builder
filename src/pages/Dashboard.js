@@ -31,9 +31,7 @@ const Dashboard = () => {
       <Header />
       <div className="p-8">
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold">
-            Welcome, {user?.name || "User"}
-          </h1>
+          <h1 className="text-3xl font-bold">Welcome, {user?.name || "User"}</h1>
 
           <button
             onClick={() => {

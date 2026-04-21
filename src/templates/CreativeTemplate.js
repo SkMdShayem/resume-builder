@@ -10,130 +10,114 @@ const CreativeTemplate = ({ data }) => {
   } = getSectionVisibility(data);
 
   return (
-    <div className="p-10 h-full flex flex-col bg-gradient-to-br from-purple-50 to-blue-50 text-gray-900">
-      {/* Header with accent */}
-      <div className="mb-6 bg-gradient-to-r from-purple-500 to-blue-500 text-white p-6 rounded-lg">
-        <h1 className="text-3xl font-bold mb-1">
+    <div className="flex h-full flex-col bg-gradient-to-br from-purple-50 to-blue-50 p-10 text-gray-900">
+      <div className="mb-6 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 p-6 text-white">
+        <h1 className="mb-1 text-3xl font-bold">
           {data?.personalInfo?.name || ""}
         </h1>
-        <div className="flex gap-3 text-xs mt-3 flex-wrap">
-          {data?.personalInfo?.email && (
-            <span>{data.personalInfo.email}</span>
-          )}
-          {data?.personalInfo?.phone && (
-            <span>•</span>
-          )}
-          {data?.personalInfo?.phone && (
-            <span>{data.personalInfo.phone}</span>
-          )}
-          {data?.personalInfo?.location && (
-            <span>•</span>
-          )}
+        <div className="mt-3 flex flex-wrap gap-3 text-xs">
+          {data?.personalInfo?.email && <span>{data.personalInfo.email}</span>}
+          {data?.personalInfo?.phone && <span>&bull;</span>}
+          {data?.personalInfo?.phone && <span>{data.personalInfo.phone}</span>}
+          {data?.personalInfo?.location && <span>&bull;</span>}
           {data?.personalInfo?.location && (
             <span>{data.personalInfo.location}</span>
           )}
         </div>
       </div>
 
-      {/* Summary */}
-      {showSummary && (
-        <div className="mb-6 bg-white p-4 rounded-lg shadow-sm">
-          <h2 className="text-sm font-bold text-purple-600 mb-2 uppercase">
+      {showSummary ? (
+        <div className="mb-6 rounded-lg bg-white p-4 shadow-sm">
+          <h2 className="mb-2 text-sm font-bold uppercase text-purple-600">
             About
           </h2>
-          <p className="text-xs leading-relaxed text-gray-700">
-            {data.summary}
-          </p>
+          <p className="text-xs leading-relaxed text-gray-700">{data.summary}</p>
         </div>
-      )}
+      ) : null}
 
-      {/* Experience & Education Side by Side */}
-      <div className="grid grid-cols-2 gap-4 flex-1">
-        {/* Experience */}
-        {showExperience && (
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h2 className="text-sm font-bold text-purple-600 mb-3 uppercase">
+      <div className="grid flex-1 grid-cols-2 gap-4">
+        {showExperience ? (
+          <div className="rounded-lg bg-white p-4 shadow-sm">
+            <h2 className="mb-3 text-sm font-bold uppercase text-purple-600">
               Experience
             </h2>
             {data.experience.map((exp, idx) => (
-              <div key={idx} className="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+              <div
+                key={idx}
+                className="mb-3 border-b border-gray-200 pb-3 last:border-b-0"
+              >
                 <span className="text-xs font-semibold text-gray-900">
                   {exp.role}
                 </span>
-                <span className="text-xs text-gray-600 block">
-                  {exp.company}
-                </span>
-                {exp.description && (
-                  <p className="text-xs text-gray-700 mt-1">
-                    {exp.description}
-                  </p>
-                )}
+                <span className="block text-xs text-gray-600">{exp.company}</span>
+                {exp.description ? (
+                  <p className="mt-1 text-xs text-gray-700">{exp.description}</p>
+                ) : null}
               </div>
             ))}
           </div>
-        )}
+        ) : null}
 
-        {/* Education */}
-        {showEducation && (
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h2 className="text-sm font-bold text-blue-600 mb-3 uppercase">
+        {showEducation ? (
+          <div className="rounded-lg bg-white p-4 shadow-sm">
+            <h2 className="mb-3 text-sm font-bold uppercase text-blue-600">
               Education
             </h2>
             {data.education.map((edu, idx) => (
-              <div key={idx} className="mb-3 pb-3 border-b border-gray-200 last:border-b-0">
+              <div
+                key={idx}
+                className="mb-3 border-b border-gray-200 pb-3 last:border-b-0"
+              >
                 <span className="text-xs font-semibold text-gray-900">
                   {edu.degree}
                 </span>
-                <span className="text-xs text-gray-600 block">
+                <span className="block text-xs text-gray-600">
                   {edu.institution}
                 </span>
-                {edu.description && (
-                  <p className="text-xs text-gray-700 mt-1">
-                    {edu.description}
-                  </p>
-                )}
+                {edu.description ? (
+                  <p className="mt-1 text-xs text-gray-700">{edu.description}</p>
+                ) : null}
               </div>
             ))}
           </div>
-        )}
+        ) : null}
       </div>
 
-      {/* Skills & Languages */}
-      <div className="grid grid-cols-2 gap-4 mt-4">
-        {showSkills && (
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h2 className="text-sm font-bold text-purple-600 mb-2 uppercase">
+      <div className="mt-4 grid grid-cols-2 gap-4">
+        {showSkills ? (
+          <div className="rounded-lg bg-white p-4 shadow-sm">
+            <h2 className="mb-2 text-sm font-bold uppercase text-purple-600">
               Skills
             </h2>
             <div className="flex flex-wrap gap-1">
               {data.skills.map((skill, idx) => (
                 <span
                   key={idx}
-                  className="bg-gradient-to-r from-purple-200 to-blue-200 text-gray-800 px-2 py-1 rounded text-xs"
+                  className="rounded bg-gradient-to-r from-purple-200 to-blue-200 px-2 py-1 text-xs text-gray-800"
                 >
                   {skill}
                 </span>
               ))}
             </div>
           </div>
-        )}
-        {showLanguages && (
-          <div className="bg-white p-4 rounded-lg shadow-sm">
-            <h2 className="text-sm font-bold text-blue-600 mb-2 uppercase">
+        ) : null}
+        {showLanguages ? (
+          <div className="rounded-lg bg-white p-4 shadow-sm">
+            <h2 className="mb-2 text-sm font-bold uppercase text-blue-600">
               Languages
             </h2>
             <div className="flex flex-wrap gap-1">
               {data.languages.map((lang, idx) => (
                 <span
                   key={idx}
-                  className="bg-gradient-to-r from-blue-200 to-purple-200 text-gray-800 px-2 py-1 rounded text-xs"
+                  className="rounded bg-gradient-to-r from-blue-200 to-purple-200 px-2 py-1 text-xs text-gray-800"
                 >
                   {lang}
                 </span>
               ))}
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

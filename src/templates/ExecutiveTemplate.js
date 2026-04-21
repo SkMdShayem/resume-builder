@@ -11,31 +11,22 @@ const ExecutiveTemplate = ({ data }) => {
   } = getSectionVisibility(data);
 
   return (
-    <div className="p-12 h-full flex flex-col bg-white text-gray-900 font-serif">
-      {/* Header */}
-      <div className="border-b-4 border-blue-900 pb-8 mb-8">
-        <h1 className="text-4xl font-bold text-blue-900 mb-2">
+    <div className="flex h-full flex-col bg-white p-12 font-serif text-gray-900">
+      <div className="mb-8 border-b-4 border-blue-900 pb-8">
+        <h1 className="mb-2 text-4xl font-bold text-blue-900">
           {data?.personalInfo?.name || ""}
         </h1>
-        <div className="flex gap-4 text-sm flex-wrap">
-          {data?.personalInfo?.email && (
-            <span>{data.personalInfo.email}</span>
-          )}
-          {data?.personalInfo?.phone && (
-            <span>•</span>
-          )}
-          {data?.personalInfo?.phone && (
-            <span>{data.personalInfo.phone}</span>
-          )}
-          {data?.personalInfo?.location && (
-            <span>•</span>
-          )}
+        <div className="flex flex-wrap gap-4 text-sm">
+          {data?.personalInfo?.email && <span>{data.personalInfo.email}</span>}
+          {data?.personalInfo?.phone && <span>&bull;</span>}
+          {data?.personalInfo?.phone && <span>{data.personalInfo.phone}</span>}
+          {data?.personalInfo?.location && <span>&bull;</span>}
           {data?.personalInfo?.location && (
             <span>{data.personalInfo.location}</span>
           )}
         </div>
-        {showLinks && (
-          <div className="flex gap-3 mt-2 text-sm">
+        {showLinks ? (
+          <div className="mt-2 flex gap-3 text-sm">
             {data?.links?.linkedin && (
               <span>LinkedIn: {data.links.linkedin}</span>
             )}
@@ -43,89 +34,85 @@ const ExecutiveTemplate = ({ data }) => {
               <span>GitHub: {data.links.github}</span>
             )}
           </div>
-        )}
+        ) : null}
       </div>
 
-      {/* Summary */}
-      {showSummary && (
+      {showSummary ? (
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-blue-900 mb-2 uppercase tracking-wide">
+          <h2 className="mb-2 text-lg font-bold uppercase tracking-wide text-blue-900">
             Professional Summary
           </h2>
           <p className="text-sm leading-relaxed">{data.summary}</p>
         </div>
-      )}
+      ) : null}
 
-      {/* Experience */}
-      {showExperience && (
+            {showExperience ? (
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-blue-900 mb-3 uppercase tracking-wide">
+          <h2 className="mb-3 text-lg font-bold uppercase tracking-wide text-blue-900">
             Professional Experience
           </h2>
           {data.experience.map((exp, idx) => (
             <div key={idx} className="mb-4">
               <div className="flex justify-between">
-                <span className="font-bold text-sm">{exp.role}</span>
+                <span className="text-sm font-bold">{exp.role}</span>
               </div>
               <span className="text-xs text-gray-600">{exp.company}</span>
-              {exp.description && (
-                <p className="text-xs mt-1 leading-relaxed">
+              {exp.description ? (
+                <p className="mt-1 text-xs leading-relaxed">
                   {exp.description}
                 </p>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {/* Education */}
-      {showEducation && (
+      {showEducation ? (
         <div className="mb-8">
-          <h2 className="text-lg font-bold text-blue-900 mb-3 uppercase tracking-wide">
+          <h2 className="mb-3 text-lg font-bold uppercase tracking-wide text-blue-900">
             Education
           </h2>
           {data.education.map((edu, idx) => (
             <div key={idx} className="mb-3">
-              <span className="font-bold text-sm">{edu.degree}</span>
-              <span className="text-xs text-gray-600 block">
+              <span className="text-sm font-bold">{edu.degree}</span>
+              <span className="block text-xs text-gray-600">
                 {edu.institution}
               </span>
-              {edu.description && (
+              {edu.description ? (
                 <p className="text-xs text-gray-700">{edu.description}</p>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
-      )}
+      ) : null}
 
-      {/* Skills & Languages */}
-      <div className="flex gap-8 text-xs flex-1">
-        {showSkills && (
+      <div className="flex flex-1 gap-8 text-xs">
+        {showSkills ? (
           <div>
-            <h2 className="font-bold text-blue-900 mb-2 uppercase tracking-wide">
+            <h2 className="mb-2 font-bold uppercase tracking-wide text-blue-900">
               Skills
             </h2>
             <div className="flex flex-wrap gap-2">
               {data.skills.map((skill, idx) => (
-                <span key={idx} className="bg-blue-100 px-2 py-1 rounded">
+                <span key={idx} className="rounded bg-blue-100 px-2 py-1">
                   {skill}
                 </span>
               ))}
             </div>
           </div>
-        )}
-        {showLanguages && (
+        ) : null}
+        {showLanguages ? (
           <div>
-            <h2 className="font-bold text-blue-900 mb-2 uppercase tracking-wide">
+            <h2 className="mb-2 font-bold uppercase tracking-wide text-blue-900">
               Languages
             </h2>
-            <ul className="list-disc list-inside">
+            <ul className="list-inside list-disc">
               {data.languages.map((lang, idx) => (
                 <li key={idx}>{lang}</li>
               ))}
             </ul>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

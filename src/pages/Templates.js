@@ -6,6 +6,7 @@ import AtsOptimizedTemplate from "../templates/AtsOptimizedTemplate";
 import CreativeTemplate from "../templates/CreativeTemplate";
 import AcademicTemplate from "../templates/AcademicTemplate";
 import EngineeringTemplate from "../templates/EngineeringTemplate";
+import TechnicalTemplate from "../templates/TechnicalTemplate";
 import ClassicTemplate from "../templates/ClassicTemplate";
 import { useDispatch } from "react-redux";
 import { setTemplate } from "../app/resumeSlice";
@@ -18,10 +19,11 @@ import TemplateCard from "../components/TemplateCard";
 const Templates = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const normalizedSample = normalizeResumeData(sampleResume);
   const previewResume = {
-    ...normalizeResumeData(sampleResume),
+    ...normalizedSample,
     personalInfo: {
-      ...normalizeResumeData(sampleResume).personalInfo,
+      ...normalizedSample.personalInfo,
       name: sampleResume.personalInfo?.name || "John Doe",
     },
   };
@@ -87,9 +89,18 @@ const Templates = () => {
       id: "engineering",
       name: "Engineering",
       component: EngineeringTemplate,
-      description: "A sharper replacement for the old technical layout with a stronger dev-first look.",
+      description:
+        "A sharper dev-first layout with stronger hierarchy and side-panel organization.",
       accent: "from-cyan-500 to-slate-950",
       tag: "New",
+    },
+    {
+      id: "technical",
+      name: "Technical",
+      component: TechnicalTemplate,
+      description: "Terminal-inspired styling for a classic engineering resume look.",
+      accent: "from-emerald-500 to-slate-900",
+      tag: "Code",
     },
     {
       id: "classic",
@@ -102,7 +113,6 @@ const Templates = () => {
   ];
 
   const handleSelect = (template) => {
-    // Clear any previous editing state so selecting a template starts fresh
     localStorage.removeItem("editingResume");
     dispatch(setTemplate(template.id));
     navigate("/builder");
@@ -121,7 +131,6 @@ const Templates = () => {
           </h1>
           <p className="mt-4 text-lg leading-8 text-slate-600">
             Start with a polished layout, then customize the content in the builder.
-            The old technical template has been replaced with a stronger engineering-focused design.
           </p>
         </div>
 

@@ -6,55 +6,57 @@ const Header = () => {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <header className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
+    <header className="sticky top-0 z-50 bg-white shadow-sm">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
           <button
             onClick={() => navigate("/")}
-            className="flex items-center gap-2 text-xl font-bold text-blue-600 hover:text-blue-700"
+            className="flex items-center gap-2 text-xl font-bold text-blue-600 transition hover:text-blue-700"
           >
-            <span className="text-2xl">📄</span>
             ResumeBuilder
           </button>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex gap-8 items-center">
+          <nav className="hidden items-center gap-8 md:flex">
+            <button
+              onClick={() => navigate("/")}
+              className="text-gray-600 transition hover:text-gray-900"
+            >
+              Home
+            </button>
             <button
               onClick={() => navigate("/templates")}
-              className="text-gray-600 hover:text-gray-900 transition"
+              className="text-gray-600 transition hover:text-gray-900"
             >
               Templates
             </button>
-            <button
-              onClick={() => navigate("/dashboard")}
-              className="text-gray-600 hover:text-gray-900 transition"
-            >
-              Dashboard
-            </button>
+            {user ? (
+              <button
+                onClick={() => navigate("/dashboard")}
+                className="text-gray-600 transition hover:text-gray-900"
+              >
+                Dashboard
+              </button>
+            ) : null}
           </nav>
 
-          {/* CTA Buttons */}
           <div className="flex gap-3">
             {!user ? (
               <>
                 <button
                   onClick={() => navigate("/login")}
-                  className="text-blue-600 hover:text-blue-700 font-semibold transition"
+                  className="font-semibold text-blue-600 transition hover:text-blue-700"
                 >
                   Login
                 </button>
                 <button
                   onClick={() => navigate("/templates")}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition"
+                  className="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
                 >
                   Get Started
                 </button>
               </>
             ) : (
-              <div className="text-gray-900 font-semibold">
-                {user.name}
-              </div>
+              <div className="font-semibold text-gray-900">{user.name}</div>
             )}
           </div>
         </div>
