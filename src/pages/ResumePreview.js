@@ -1,64 +1,49 @@
-import { useEffect, useState } from "react";
-import { pdf } from "@react-pdf/renderer";
 import { useSelector } from "react-redux";
-import ResumePdfDocument from "../pdf/ResumePdfDocument";
+import ModernTemplate from "../templates/ModernTemplate";
+import MinimalTemplate from "../templates/MinimalTemplate";
+import ProfessionalTemplate from "../templates/ProfessionalTemplate";
+import ExecutiveTemplate from "../templates/ExecutiveTemplate";
+import AtsOptimizedTemplate from "../templates/AtsOptimizedTemplate";
+import CreativeTemplate from "../templates/CreativeTemplate";
+import AcademicTemplate from "../templates/AcademicTemplate";
+import EngineeringTemplate from "../templates/EngineeringTemplate";
+import ClassicTemplate from "../templates/ClassicTemplate";
 import normalizeResumeData from "../utils/normalizeResumeData";
 
 const ResumePreview = () => {
   const { currentResume, selectedTemplate } = useSelector(
     (state) => state.resume,
   );
-  const [previewUrl, setPreviewUrl] = useState("");
 
-  const templateToRender = currentResume?.template ?? selectedTemplate ?? "modern";
+  const templateToRender = currentResume?.template ?? selectedTemplate;
   const normalizedResume = normalizeResumeData(currentResume);
-  const resumeSignature = JSON.stringify(normalizedResume);
 
-  useEffect(() => {
-    let isMounted = true;
-    let objectUrl = "";
-
-    const generatePreview = async () => {
-      const resumeData = JSON.parse(resumeSignature);
-
-      try {
-        const blob = await pdf(
-          <ResumePdfDocument
-            resume={resumeData}
-            template={templateToRender}
-          />,
-        ).toBlob();
-
-        objectUrl = URL.createObjectURL(blob);
-
-        if (isMounted) {
-          setPreviewUrl((currentUrl) => {
-            if (currentUrl) {
-              URL.revokeObjectURL(currentUrl);
-            }
-
-            return objectUrl;
-          });
-        } else {
-          URL.revokeObjectURL(objectUrl);
-        }
-      } catch (error) {
-        if (isMounted) {
-          setPreviewUrl("");
-        }
-      }
-    };
-
-    generatePreview();
-
-    return () => {
-      isMounted = false;
-
-      if (objectUrl) {
-        URL.revokeObjectURL(objectUrl);
-      }
-    };
-  }, [resumeSignature, templateToRender]);
+  const renderTemplate = () => {
+    switch (templateToRender) {
+      case "modern":
+        return <ModernTemplate data={normalizedResume} />;
+      case "minimal":
+        return <MinimalTemplate data={normalizedResume} />;
+      case "professional":
+        return <ProfessionalTemplate data={normalizedResume} />;
+      case "executive":
+        return <ExecutiveTemplate data={normalizedResume} />;
+      case "ats-optimized":
+        return <AtsOptimizedTemplate data={normalizedResume} />;
+      case "creative":
+        return <CreativeTemplate data={normalizedResume} />;
+      case "academic":
+        return <AcademicTemplate data={normalizedResume} />;
+      case "engineering":
+        return <EngineeringTemplate data={normalizedResume} />;
+      case "technical":
+        return <EngineeringTemplate data={normalizedResume} />;
+      case "classic":
+        return <ClassicTemplate data={normalizedResume} />;
+      default:
+        return <ModernTemplate data={normalizedResume} />;
+    }
+  };
 
   return (
     <div
@@ -67,19 +52,9 @@ const ResumePreview = () => {
     >
       <div
         id="resume-preview"
-        className="w-full max-w-[794px] min-h-[1123px] overflow-hidden rounded bg-white shadow-lg"
+        className="w-full max-w-[794px] min-h-[1123px] bg-white shadow-lg overflow-hidden"
       >
-        {previewUrl ? (
-          <iframe
-            title="Resume PDF Preview"
-            src={previewUrl}
-            className="h-[1123px] w-full border-0"
-          />
-        ) : (
-          <div className="flex h-[1123px] items-center justify-center text-sm text-gray-500">
-            Generating preview...
-          </div>
-        )}
+        {renderTemplate()}
       </div>
     </div>
   );

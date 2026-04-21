@@ -204,6 +204,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     fontSize: 8,
+    marginRight: 6,
+    marginBottom: 6,
   },
   list: {
     gap: 6,
@@ -288,7 +290,7 @@ const styles = StyleSheet.create({
     borderColor: "#1f2937",
     backgroundColor: "#0b1120",
     padding: 9,
-    gap: 3,
+    marginTop: 8,
   },
   engineeringProfileTitle: {
     fontSize: 9,
@@ -320,7 +322,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     backgroundColor: "#ffffff",
     padding: 18,
-    gap: 10,
+    marginBottom: 14,
   },
   engineeringDarkSurface: {
     borderRadius: 18,
@@ -328,7 +330,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#1e293b",
     padding: 16,
-    gap: 10,
+    marginBottom: 14,
   },
   engineeringSectionHeader: {
     flexDirection: "row",
@@ -374,7 +376,7 @@ const styles = StyleSheet.create({
     borderColor: "#e2e8f0",
     backgroundColor: "#f8fafc",
     padding: 14,
-    gap: 4,
+    marginTop: 10,
   },
   engineeringCardTitle: {
     fontSize: 11,
@@ -405,6 +407,8 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     fontSize: 8.5,
     color: "#cffafe",
+    marginRight: 6,
+    marginBottom: 6,
   },
   engineeringLanguageCard: {
     borderRadius: 12,
@@ -413,10 +417,25 @@ const styles = StyleSheet.create({
     backgroundColor: "#111827",
     paddingHorizontal: 12,
     paddingVertical: 9,
+    marginTop: 8,
   },
   engineeringLanguageText: {
     fontSize: 9,
     color: "#e2e8f0",
+  },
+  engineeringRoleBadge: {
+    alignSelf: "flex-start",
+    marginTop: 8,
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: "#bae6fd",
+    backgroundColor: "#ecfeff",
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    fontSize: 7.5,
+    fontFamily: "Helvetica-Bold",
+    color: "#0e7490",
+    letterSpacing: 0.8,
   },
 });
 
@@ -669,6 +688,7 @@ const ResumePdfDocument = ({ resume = {}, template = "modern" }) => {
                             {item.company}
                           </Text>
                         ) : null}
+                        <Text style={styles.engineeringRoleBadge}>ROLE</Text>
                         {item.description ? (
                           <Text style={styles.engineeringCardBody}>
                             {item.description}
