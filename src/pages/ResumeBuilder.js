@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
 import Header from "../components/Header";
@@ -14,78 +16,81 @@ const ResumeBuilder = () => {
     try {
       const resumeNode = document.getElementById("resume-preview");
       if (!resumeNode) {
+        alert("Resume preview not found");
+        setIsDownloading(false);
         return;
       }
 
-      const printWindow = window.open("", "_blank", "width=900,height=1200");
-      if (!printWindow) {
-        return;
-      }
-
-      const styleMarkup = Array.from(
-        document.querySelectorAll('style, link[rel="stylesheet"]'),
-      )
-        .map((node) => node.outerHTML)
-        .join("\n");
       const resumeTitle = currentResume?.personalInfo?.name || "My_Resume";
 
-      printWindow.document.open();
-      printWindow.document.write(`
-        <!DOCTYPE html>
-        <html lang="en">
-          <head>
-            <meta charset="utf-8" />
-            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-            <title>${resumeTitle}</title>
-            ${styleMarkup}
-            <style>
-              @page {
-                size: A4;
-                margin: 0;
-              }
+      // Add temporary styles to the document head
+      const style = document.createElement("style");
+      style.id = "pdf-download-style";
+      style.innerHTML = `
+        .skills-tags, .languages-tags {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 8px !important;
+        }
+        
+        .skills-tags span, .languages-tags span {
+          display: list-item !important;
+          list-style-type: disc !important;
+          margin-left: 20px !important;
+          background-color: transparent !important;
+          padding: 0 !important;
+          border-radius: 0 !important;
+        }
+      `;
+      document.head.appendChild(style);
 
-              html, body {
-                margin: 0;
-                padding: 0;
-                background: #ffffff;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-              }
+      // Small delay to ensure styles are applied
+      await new Promise(resolve => setTimeout(resolve, 100));
 
-              body {
-                display: flex;
-                justify-content: center;
-              }
+      // Capture the resume as a canvas
+      const canvas = await html2canvas(resumeNode, {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        backgroundColor: "#ffffff",
+        allowTaint: true,
+      });
 
-              #print-root {
-                width: 794px;
-                min-height: 1123px;
-                margin: 0 auto;
-                background: #ffffff;
-                overflow: hidden;
-              }
+      // Remove temporary styles
+      document.head.removeChild(style);
 
-              #print-root * {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-              }
-            </style>
-          </head>
-          <body>
-            <div id="print-root">${resumeNode.innerHTML}</div>
-          </body>
-        </html>
-      `);
-      printWindow.document.close();
+      // Get canvas dimensions
+      const imgData = canvas.toDataURL("image/png");
+      const imgWidth = 210; // A4 width in mm
+      const pageHeight = 297; // A4 height in mm
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-      const handlePrint = () => {
-        printWindow.focus();
-        printWindow.print();
-      };
+      // Create PDF
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
 
-      printWindow.onload = () => {
-        setTimeout(handlePrint, 250);
-      };
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Add image to PDF, creating new pages as needed
+      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft > 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      // Download the PDF
+      pdf.save(`${resumeTitle}.pdf`);
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
     } finally {
       setIsDownloading(false);
     }
@@ -131,7 +136,7 @@ const ResumeBuilder = () => {
                 disabled={isDownloading}
                 className="rounded bg-green-600 px-6 py-2 text-white shadow-lg disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {isDownloading ? "Preparing PDF..." : "Save as PDF"}
+                {isDownloading ? "Generating PDF..." : "Download PDF"}
               </button>
             </div>
             <ResumePreview />

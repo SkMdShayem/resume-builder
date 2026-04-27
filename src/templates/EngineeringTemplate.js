@@ -146,7 +146,7 @@ const EngineeringTemplate = ({ data }) => {
           {showSkills ? (
             <section className="rounded-3xl border border-white/10 bg-slate-900/80 p-6">
               <SectionHeading eyebrow="Stack" title="Skills" />
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 skills-tags">
                 {skills.map((skill, idx) => (
                   <span
                     key={idx}

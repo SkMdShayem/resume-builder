@@ -64,7 +64,7 @@ const ProfessionalTemplate = ({ data }) => {
               <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 Skills
               </h2>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap gap-2 skills-tags">
                 {skills.map((skill, i) => (
                   <span
                     key={i}
@@ -82,7 +82,7 @@ const ProfessionalTemplate = ({ data }) => {
               <h2 className="text-sm font-semibold uppercase tracking-wide text-slate-200">
                 Languages
               </h2>
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-3 flex flex-wrap gap-2 languages-tags">
                 {languages.map((lang, i) => (
                   <span
                     key={i}

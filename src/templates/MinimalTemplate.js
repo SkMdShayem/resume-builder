@@ -28,13 +28,13 @@ const MinimalTemplate = ({ data }) => {
         </p>
         <div className="mt-3 flex flex-wrap justify-center gap-3 text-sm text-gray-500">
           {links.linkedin && (
-            <span className="px-3 py-1 rounded-full bg-gray-100">LinkedIn: {links.linkedin}</span>
+            <span className="px-3 py-1 rounded-full bg-gray-100">{links.linkedin}</span>
           )}
           {links.github && (
-            <span className="px-3 py-1 rounded-full bg-gray-100">GitHub: {links.github}</span>
+            <span className="px-3 py-1 rounded-full bg-gray-100">{links.github}</span>
           )}
           {links.portfolio && (
-            <span className="px-3 py-1 rounded-full bg-gray-100">Portfolio: {links.portfolio}</span>
+            <span className="px-3 py-1 rounded-full bg-gray-100">{links.portfolio}</span>
           )}
         </div>
       </header>
@@ -93,7 +93,7 @@ const MinimalTemplate = ({ data }) => {
               <h2 className="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4">
                 Skills
               </h2>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 skills-tags">
                 {skills.map((skill, i) => (
                   <span
                     key={i}
@@ -111,7 +111,7 @@ const MinimalTemplate = ({ data }) => {
               <h2 className="text-xl font-semibold text-gray-800 border-b border-gray-200 pb-2 mb-4">
                 Languages
               </h2>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2 languages-tags">
                 {languages.map((lang, i) => (
                   <span
                     key={i}

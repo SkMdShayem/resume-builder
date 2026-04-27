@@ -92,7 +92,7 @@ const ExecutiveTemplate = ({ data }) => {
             <h2 className="mb-2 font-bold uppercase tracking-wide text-blue-900">
               Skills
             </h2>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 skills-tags">
               {data.skills.map((skill, idx) => (
                 <span key={idx} className="rounded bg-blue-100 px-2 py-1">
                   {skill}

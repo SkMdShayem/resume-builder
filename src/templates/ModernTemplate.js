@@ -31,13 +31,13 @@ const ModernTemplate = ({ data }) => {
           </div>
           <div className="mt-4 flex flex-wrap gap-3 text-xs">
             {links.linkedin && (
-              <span className="rounded-full bg-white/15 px-3 py-1">LinkedIn</span>
+              <span className="rounded-full bg-white/15 px-3 py-1">{links.linkedin}</span>
             )}
             {links.github && (
-              <span className="rounded-full bg-white/15 px-3 py-1">GitHub</span>
+              <span className="rounded-full bg-white/15 px-3 py-1">{links.github}</span>
             )}
             {links.portfolio && (
-              <span className="rounded-full bg-white/15 px-3 py-1">Portfolio</span>
+              <span className="rounded-full bg-white/15 px-3 py-1">{links.portfolio}</span>
             )}
           </div>
         </div>
@@ -95,7 +95,7 @@ const ModernTemplate = ({ data }) => {
                 {showSkills ? (
                   <div>
                     <h3 className="text-sm font-semibold text-slate-600 mb-2">Skills</h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 skills-tags">
                       {skills.map((skill, i) => (
                         <span
                           key={i}
@@ -111,7 +111,7 @@ const ModernTemplate = ({ data }) => {
                 {showLanguages ? (
                   <div>
                     <h3 className="text-sm font-semibold text-slate-600 mb-2">Languages</h3>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 languages-tags">
                       {languages.map((lang, i) => (
                         <span
                           key={i}

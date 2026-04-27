@@ -4,7 +4,7 @@ const TechnicalTemplate = ({ data }) => {
       {/* Header */}
       <div className="mb-6 border-b-2 border-green-400 pb-4">
         <h1 className="text-2xl font-bold text-green-400 mb-1 font-sans">
-          {`>`} {data?.personalInfo?.name || "Your Name"}
+          {data?.personalInfo?.name}
         </h1>
         <div className="text-xs text-gray-400 space-y-1">
           {data?.personalInfo?.email && (
