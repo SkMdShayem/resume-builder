@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf";
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
 import Header from "../components/Header";
@@ -22,86 +20,129 @@ const ResumeBuilder = () => {
 
   const downloadPDF = async () => {
     setIsDownloading(true);
+    let exportRoot = null;
 
     try {
       const resumeNode = document.getElementById("resume-preview");
       if (!resumeNode) {
         alert("Resume preview not found");
-        setIsDownloading(false);
         return;
       }
 
       const resumeTitle = currentResume?.personalInfo?.name || "My_Resume";
+      const safeResumeTitle = resumeTitle
+        .trim()
+        .replace(/[\\/:*?"<>|]+/g, "_")
+        .replace(/\s+/g, "_");
+      const [{ default: html2canvas }, { default: jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
 
-      // Add temporary styles to the document head
-      const style = document.createElement("style");
-      style.id = "pdf-download-style";
-      style.innerHTML = `
-        .skills-tags, .languages-tags {
-          display: flex !important;
-          flex-direction: column !important;
-          gap: 8px !important;
-        }
-        
-        .skills-tags span, .languages-tags span {
-          display: list-item !important;
-          list-style-type: disc !important;
-          margin-left: 20px !important;
-          background-color: transparent !important;
-          padding: 0 !important;
-          border-radius: 0 !important;
-        }
-      `;
-      document.head.appendChild(style);
+      // Render an offscreen fixed-width clone so export always uses A4 layout.
+      exportRoot = document.createElement("div");
+      exportRoot.style.position = "fixed";
+      exportRoot.style.left = "-10000px";
+      exportRoot.style.top = "0";
+      exportRoot.style.width = "794px";
+      exportRoot.style.zIndex = "-1";
+      exportRoot.style.background = "#ffffff";
 
-      // Small delay to ensure styles are applied
-      await new Promise(resolve => setTimeout(resolve, 100));
+      const clonedResume = resumeNode.cloneNode(true);
+      if (!(clonedResume instanceof HTMLElement)) {
+        throw new Error("Unable to clone resume preview.");
+      }
 
-      // Capture the resume as a canvas
-      const canvas = await html2canvas(resumeNode, {
+      clonedResume.style.width = "794px";
+      clonedResume.style.maxWidth = "794px";
+      clonedResume.style.boxShadow = "none";
+      exportRoot.appendChild(clonedResume);
+      document.body.appendChild(exportRoot);
+
+      const canvas = await html2canvas(clonedResume, {
         scale: 2,
         useCORS: true,
         logging: false,
         backgroundColor: "#ffffff",
-        allowTaint: true,
+        windowWidth: 1200,
       });
 
-      // Remove temporary styles
-      document.head.removeChild(style);
-
-      // Get canvas dimensions
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 210; // A4 width in mm
-      const pageHeight = 297; // A4 height in mm
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-      // Create PDF
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
       });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
 
-      let heightLeft = imgHeight;
-      let position = 0;
+      // Split by page-sized canvas chunks to avoid floating point blank pages.
+      const sourcePageHeight = Math.round((canvas.width * pageHeight) / pageWidth);
+      const tinyRemainderThreshold = 12;
 
-      // Add image to PDF, creating new pages as needed
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      let renderedHeight = 0;
+      let pageIndex = 0;
 
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+      while (renderedHeight < canvas.height) {
+        const remainingHeight = canvas.height - renderedHeight;
+        const shouldMergeTinyRemainder =
+          remainingHeight <= sourcePageHeight + tinyRemainderThreshold;
+
+        const pageCanvas = document.createElement("canvas");
+        const currentSliceHeight = shouldMergeTinyRemainder
+          ? remainingHeight
+          : sourcePageHeight;
+        const isFullPageSlice = currentSliceHeight >= sourcePageHeight;
+        pageCanvas.width = canvas.width;
+        pageCanvas.height = currentSliceHeight;
+
+        const pageContext = pageCanvas.getContext("2d");
+        if (!pageContext) {
+          throw new Error("Unable to create PDF page context.");
+        }
+
+        pageContext.drawImage(
+          canvas,
+          0,
+          renderedHeight,
+          canvas.width,
+          pageCanvas.height,
+          0,
+          0,
+          canvas.width,
+          pageCanvas.height,
+        );
+
+        const pageImageData = pageCanvas.toDataURL("image/png");
+        const pageImageHeight = isFullPageSlice
+          ? pageHeight
+          : (pageCanvas.height * pageWidth) / pageCanvas.width;
+
+        if (pageIndex > 0) {
+          pdf.addPage();
+        }
+
+        pdf.addImage(pageImageData, "PNG", 0, 0, pageWidth, pageImageHeight);
+
+        renderedHeight += currentSliceHeight;
+        pageIndex += 1;
       }
 
-      // Download the PDF
-      pdf.save(`${resumeTitle}.pdf`);
+      const blob = pdf.output("blob");
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${safeResumeTitle || "My_Resume"}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
     } catch (error) {
       console.error("Error generating PDF:", error);
       alert("Error generating PDF. Please try again.");
     } finally {
+      if (exportRoot && exportRoot.parentNode) {
+        exportRoot.parentNode.removeChild(exportRoot);
+      }
       setIsDownloading(false);
     }
   };

@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   },
   sidebarWrap: {
     flexDirection: "row",
-    minHeight: "100%",
+    flex: 1,
   },
   sidebar: {
     width: "31%",
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 22,
     backgroundColor: "#020617",
-    minHeight: "100%",
+    flex: 1,
   },
   engineeringMain: {
     flex: 1.65,
