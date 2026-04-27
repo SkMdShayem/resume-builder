@@ -16,7 +16,7 @@ import {
   setTemplate,
   updateLinks,
 } from "../app/resumeSlice";
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import improveSummary from "../services/gptServices";
 import { useNavigate } from "react-router-dom";
 import normalizeResumeData from "../utils/normalizeResumeData";
@@ -31,6 +31,8 @@ const ResumeForm = () => {
   const [skill, setSkill] = useState("");
   const [language, setLanguage] = useState("");
   const [step, setStep] = useState(1);
+  const [isImprovingSummary, setIsImprovingSummary] = useState(false);
+  const [improveSummaryError, setImproveSummaryError] = useState("");
 
   const nextStep = () => setStep((prev) => prev + 1);
   const prevStep = () => setStep((prev) => prev - 1);
@@ -76,8 +78,25 @@ const ResumeForm = () => {
   };
 
   const handleImproveSummary = async () => {
-    const improved = await improveSummary(resume.summary);
-    dispatch(updateSummary(improved));
+    const summary = resume.summary?.trim();
+    if (!summary) {
+      setImproveSummaryError("Add a summary first, then click Improve with AI.");
+      return;
+    }
+
+    setIsImprovingSummary(true);
+    setImproveSummaryError("");
+
+    try {
+      const improved = await improveSummary(summary);
+      dispatch(updateSummary(improved));
+    } catch (error) {
+      setImproveSummaryError(
+        error.message || "Unable to improve summary right now. Please try again.",
+      );
+    } finally {
+      setIsImprovingSummary(false);
+    }
   };
 
   useEffect(() => {
@@ -206,10 +225,11 @@ const ResumeForm = () => {
                   </h2>
                   <button
                     type="button"
-                    className="bg-purple-600 text-white px-4 py-2 rounded mb-2"
+                    className="bg-purple-600 text-white px-4 py-2 rounded mb-2 disabled:opacity-60"
                     onClick={handleImproveSummary}
+                    disabled={isImprovingSummary}
                   >
-                    Improve with AI
+                    {isImprovingSummary ? "Improving..." : "Improve with AI"}
                   </button>
                 </div>
                 <textarea
@@ -218,6 +238,9 @@ const ResumeForm = () => {
                   className="w-full border p-3 rounded"
                   rows={4}
                 />
+                {improveSummaryError && (
+                  <p className="text-sm text-red-600 mt-2">{improveSummaryError}</p>
+                )}
               </div>
             </div>
           </>

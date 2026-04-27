@@ -5,10 +5,20 @@ import jsPDF from "jspdf";
 import ResumeForm from "./ResumeForm";
 import ResumePreview from "./ResumePreview";
 import Header from "../components/Header";
+import {
+  AI_ENDPOINTS,
+  AI_HEALTH_ENDPOINTS,
+} from "../services/gptServices";
 
 const ResumeBuilder = () => {
   const { currentResume } = useSelector((state) => state.resume);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [aiHealth, setAiHealth] = useState({
+    checked: false,
+    reachable: true,
+    keyConfigured: true,
+    activeHealthEndpoint: "",
+  });
 
   const downloadPDF = async () => {
     setIsDownloading(true);
@@ -97,6 +107,50 @@ const ResumeBuilder = () => {
   };
 
   useEffect(() => {
+    let isMounted = true;
+
+    const checkAiHealth = async () => {
+      for (const endpoint of AI_HEALTH_ENDPOINTS) {
+        try {
+          const response = await fetch(endpoint);
+          const data = await response.json().catch(() => null);
+
+          if (!response.ok) {
+            throw new Error(`Health check failed (${response.status}).`);
+          }
+
+          if (isMounted) {
+            setAiHealth({
+              checked: true,
+              reachable: true,
+              keyConfigured: Boolean(data?.openAiKeyConfigured),
+              activeHealthEndpoint: endpoint,
+            });
+          }
+
+          return;
+        } catch {
+          continue;
+        }
+      }
+
+      if (isMounted) {
+        setAiHealth({
+          checked: true,
+          reachable: false,
+          keyConfigured: false,
+          activeHealthEndpoint: "",
+        });
+      }
+    };
+    checkAiHealth();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     const form = document.getElementById("form-container");
     const preview = document.getElementById("preview-container");
 
@@ -120,6 +174,20 @@ const ResumeBuilder = () => {
   return (
     <div className="min-h-screen bg-gray-100">
       <Header />
+      {aiHealth.checked && !aiHealth.reachable ? (
+        <div className="mx-10 mt-6 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700">
+          AI server is offline. Start it with <code>npm run ai-server</code>. Tried
+          health checks at <code>{AI_HEALTH_ENDPOINTS.join(", ")}</code> and summary
+          endpoints at <code>{AI_ENDPOINTS.join(", ")}</code>.
+        </div>
+      ) : null}
+      {aiHealth.checked && aiHealth.reachable && !aiHealth.keyConfigured ? (
+        <div className="mx-10 mt-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          AI server is running, but <code>OPENAI_API_KEY</code> is missing. Add it to
+          <code> .env </code> in the project root, then restart
+          <code> npm run ai-server</code>.
+        </div>
+      ) : null}
       <div className="flex gap-8 p-10 pt-20">
         <div
           id="form-container"
